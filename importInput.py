@@ -1,10 +1,12 @@
 # Scrape the contents of the puzzle input page
-from urllib.request import FancyURLopener
+import urllib3
 
-# define new class, with new user-agent
-class MyOpener(FancyURLopener):
-    version = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11'
+# I need to log in to get the puzzle input
 
-myopener = MyOpener()
-with myopener.open('https://adventofcode.com/2018/day/1/input') as page:
-    print(page.read())
+
+# instanciate a poolmanager to make requests
+http = urllib3.PoolManager()
+
+r = http.request('GET', 'https://adventofcode.com/2018/day/1/input')
+
+print(r.data)
