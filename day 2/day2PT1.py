@@ -4,16 +4,6 @@
 
 # im not trying regex
 
-data = [
-    "abcdef",
-    "bababc",   #counts for both, yes and yes
-    "abbcde",   #
-    "abcccd", 
-    "aabcdd", 
-    "abcdee", 
-    "ababab"
-]
-
 # open the input file
 infile = open(r'day 2\input', 'r', newline='\r\n')
 data = infile.read().splitlines()
@@ -28,7 +18,6 @@ for item in data:
     foundLetters = list(item)
     setLetter = set(foundLetters)
 
-    print(item)
     # keep track of double and triple letter combos
     foundNumbers = []
     for letter in setLetter:
