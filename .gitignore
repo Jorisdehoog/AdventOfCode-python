@@ -1,3 +1,5 @@
 /.vscode
+/regextesting
+
 authentication.txt
 importInput.py
