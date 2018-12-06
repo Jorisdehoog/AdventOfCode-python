@@ -11,13 +11,13 @@ import time
 startTime = time.time()
 
 infile = open(r'day 1\input', 'r', newline='\r\n')
+data = infile.read().splitlines()
 
 # definitions
 freq = 0
 freqList = []
 working = True
 
-data = infile.read().splitlines()
 # do the thing
 while working == True:
     for item in data:
