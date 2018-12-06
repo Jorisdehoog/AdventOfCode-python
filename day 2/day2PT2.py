@@ -27,15 +27,18 @@ data = [
 # count the number of matching elements. If this is less than len(item) - 1
 # we automatically reject. If the difference is exactly one, we know we found the match
 
+infile = open(r'day 2\input', 'r', newline='\r\n')
+data = infile.read().splitlines()
+
 print('length of the input array: {}'.format(len(data)))
 
 for i in range(0, len(data)):
     itemList = list(data[i])
     # look im doing list comprehension!
     itemListOrd = [ord(p)-96 for p in itemList]
-    print('-- {} --'.format(itemList))
+    # print('-- {} --'.format(itemList))
 
-    print(itemList)
+    # print(itemList)
     # look for all following items
     for j in range(i+1, len(data)):
         itemCheck = list(data[j])
@@ -45,10 +48,16 @@ for i in range(0, len(data)):
         for x, y in zip(itemListOrd, itemCheckOrd):
             total.append(x-y)
         # remove the zeros
-        total = [p for p in total if p != 0]
-        if len(total) == 1:
+        totalNoZero = [p for p in total if p != 0]
+        if len(totalNoZero) == 1:
             print("{} AND {}".format(data[i], data[j]))
+            # find the index of the nonzero element in total
+            index = total.index(totalNoZero[0])
+            # correspondingLetters = itemList.pop(index)
+            itemList.pop(index)
             print('we found it!')
+            print('Answer: {}'.format(''.join(itemList)))
+
 
 
         
