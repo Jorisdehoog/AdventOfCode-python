@@ -6,8 +6,8 @@
 
 data = [
     "abcdef",
-    "bababc", 
-    "abbcde", 
+    "bababc",   #counts for both, yes and yes
+    "abbcde",   #
     "abcccd", 
     "aabcdd", 
     "abcdee", 
@@ -16,9 +16,19 @@ data = [
 
 for item in data: 
     foundLetters = []
-    for letter in item: 
-        index = []
-        index.append(item.find(letter))
-        print(index)
+    # use a set
+    foundLetters = list(item)
+    setLetter = set(foundLetters)
+
+    print(foundLetters)
+    # keep track of double and triple letter combos
+    foundNumbers = []
+    for letter in setLetter:
+        amount = foundLetters.count(letter)
+        if amount == 2 or amount == 3:
+            foundNumbers.append(amount)
+        
+        print("Found {} {} times".format(letter, foundLetters.count(letter)))
+        print('test')
         
     print(item)
