@@ -4,33 +4,12 @@
 # import statements
 import re
 import numpy as np
-# example input
-data = [
-    "#1 @ 1,3: 4x4",
-    "#2 @ 3,1: 4x4",
-    "#3 @ 5,5: 2x2"
-]
 
 infile = open(r'day 3\input', 'r', newline='\r\n')
 data = infile.read().splitlines()
 
-# data = ["#123 @ 3,2: 5x4"]
-# should give
-# ...........
-# ...........
-# ...#####...
-# ...#####...
-# ...#####...
-# ...#####...
-# ...........
-# ...........
-# ...........
-
 # the canvas is at least 1000*1000 large, but it could be larger? Looking at the input data it seems to not exceed this limit
 canvas = np.zeros((1000, 1000))
-print(canvas.shape)
-
-# print(canvas)
 
 def getInfoFromInput(str):
     # get the id
@@ -58,7 +37,6 @@ def getInfoFromInput(str):
 
 for element in data:
     idClaim, startPos, claimSize = getInfoFromInput(element)
-    # print(idClaim, startPos, claimSize)
     # start populating the canvas
     for i in range(0, claimSize[0]):
         for j in range(0, claimSize[1]):
