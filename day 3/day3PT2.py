@@ -38,6 +38,7 @@ def getInfoFromInput(str):
 for element in data:
     idClaim, startPos, claimSize = getInfoFromInput(element)
     # start populating the canvas
+    # TODO: slice this instead of loooping 
     for i in range(0, claimSize[0]):
         for j in range(0, claimSize[1]):
             canvas[startPos[1] + j][startPos[0] + i] += 1
