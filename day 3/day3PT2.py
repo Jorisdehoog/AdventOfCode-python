@@ -8,8 +8,15 @@ import numpy as np
 infile = open(r'day 3\input', 'r', newline='\r\n')
 data = infile.read().splitlines()
 
+data = [
+    "#1 @ 1,3: 4x4",
+    "#2 @ 3,1: 4x4",
+    "#3 @ 5,5: 2x2"
+]
+
 # the canvas is at least 1000*1000 large, but it could be larger? Looking at the input data it seems to not exceed this limit
-canvas = np.zeros((1000, 1000))
+# canvas = np.zeros((1000, 1000))
+canvas = np.zeros((10, 10))
 
 def getInfoFromInput(str):
     # get the id
@@ -38,12 +45,10 @@ def getInfoFromInput(str):
 for element in data:
     idClaim, startPos, claimSize = getInfoFromInput(element)
     # start populating the canvas
-    # TODO: slice this instead of loooping 
-    for i in range(0, claimSize[0]):
-        for j in range(0, claimSize[1]):
-            canvas[startPos[1] + j][startPos[0] + i] += 1
+    canvas[startPos[1]: startPos[1] + claimSize[1], startPos[0]: startPos[0] + claimSize[0]] += 1
     
-print(canvas[500:510, 500:510])
+# print(canvas[500:510, 500:510])
+print(canvas)
 overlap = np.where(canvas >= 2)
 
 print('Overlapping squares: {}'.format(len(overlap[0])))
@@ -51,3 +56,4 @@ print('Overlapping squares: {}'.format(len(overlap[0])))
 # we can loop through the claims again, checking if all elements from this claim are equal to 1 
 # (meaning sum of the contents == multiplication of the sizes of the claim)
 # we can also nicely slice the matrix
+
