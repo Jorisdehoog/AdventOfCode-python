@@ -8,15 +8,16 @@ import numpy as np
 infile = open(r'day 3\input', 'r', newline='\r\n')
 data = infile.read().splitlines()
 
-data = [
-    "#1 @ 1,3: 4x4",
-    "#2 @ 3,1: 4x4",
-    "#3 @ 5,5: 2x2"
-]
+# data = [
+#     "#1 @ 1,3: 4x4",
+#     "#2 @ 3,1: 4x4",
+#     "#3 @ 5,5: 2x2"
+# ]
 
 # the canvas is at least 1000*1000 large, but it could be larger? Looking at the input data it seems to not exceed this limit
-# canvas = np.zeros((1000, 1000))
-canvas = np.zeros((10, 10))
+canvas = np.zeros((1000, 1000))
+# canvas = np.zeros((8, 8))
+idcanvas = canvas.copy()
 
 def getInfoFromInput(str):
     # get the id
@@ -47,8 +48,11 @@ for element in data:
     # start populating the canvas
     canvas[startPos[1]: startPos[1] + claimSize[1], startPos[0]: startPos[0] + claimSize[0]] += 1
     
+    
 # print(canvas[500:510, 500:510])
-print(canvas)
+# print(canvas)
+# print('----------------------------')
+# print(idcanvas)
 overlap = np.where(canvas >= 2)
 
 print('Overlapping squares: {}'.format(len(overlap[0])))
@@ -56,4 +60,16 @@ print('Overlapping squares: {}'.format(len(overlap[0])))
 # we can loop through the claims again, checking if all elements from this claim are equal to 1 
 # (meaning sum of the contents == multiplication of the sizes of the claim)
 # we can also nicely slice the matrix
+for element in data:
+    idClaim, startPos, claimSize = getInfoFromInput(element)
+    # get the contents of the specific patch of the canvas
+    canvasSlice = canvas[startPos[1]: startPos[1] + claimSize[1], startPos[0]: startPos[0] + claimSize[0]]
+    
+    # flatten
+    # print(canvasSlice.ravel())
+    if np.amax(canvasSlice) > 1 or np.count_nonzero(canvasSlice) == 0:
+        continue
+    else:
+        print('Is this the match? {}'.format(idClaim))
 
+# 
