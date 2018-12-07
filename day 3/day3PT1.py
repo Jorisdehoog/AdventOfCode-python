@@ -24,9 +24,16 @@ print(idClaim.group())
 # this gets the starting positions
 startPos = re.search(r'\d*\,\d*', str)
 startPos = startPos.group()
+# split up into respective parts, separated by ','
+startPos = startPos.split(',')
+# special loop thing
+startPos = [int(i) for i in startPos]
 print(startPos)
 
 # get the size of each canvas
 canvasSize = re.search(r'\d*x\d*', str)
 canvasSize = canvasSize.group()
-print(canvasSize
+# same as above
+canvasSize = canvasSize.split('x')
+canvasSize = [int(i) for i in canvasSize]
+print(canvasSize)
