@@ -42,7 +42,11 @@ for element in data:
         for j in range(0, claimSize[1]):
             canvas[startPos[1] + j][startPos[0] + i] += 1
     
+print(canvas[500:510, 500:510])
 overlap = np.where(canvas >= 2)
 
 print('Overlapping squares: {}'.format(len(overlap[0])))
 
+# we can loop through the claims again, checking if all elements from this claim are equal to 1 
+# (meaning sum of the contents == multiplication of the sizes of the claim)
+# we can also nicely slice the matrix
