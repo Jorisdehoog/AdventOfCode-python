@@ -3,27 +3,7 @@
 import pprint
 import re
 from dateutil import parser
-
-# test data: 
-# data = [
-#     "[1518-11-01 00:00] Guard #10 begins shift",
-#     "[1518-11-01 00:05] falls asleep",
-#     "[1518-11-01 00:25] wakes up",
-#     "[1518-11-01 00:30] falls asleep",
-#     "[1518-11-01 00:55] wakes up",
-#     "[1518-11-01 23:58] Guard #99 begins shift",
-#     "[1518-11-02 00:40] falls asleep",
-#     "[1518-11-02 00:50] wakes up",
-#     "[1518-11-03 00:05] Guard #10 begins shift",
-#     "[1518-11-03 00:24] falls asleep",
-#     "[1518-11-03 00:29] wakes up",
-#     "[1518-11-04 00:02] Guard #99 begins shift",
-#     "[1518-11-04 00:36] falls asleep",
-#     "[1518-11-04 00:46] wakes up",
-#     "[1518-11-05 00:03] Guard #99 begins shift",
-#     "[1518-11-05 00:45] falls asleep",
-#     "[1518-11-05 00:55] wakes up"
-# ]
+from operator import itemgetter
 
 data = [
     "[1518-05-11 00:47] wakes up",
@@ -54,7 +34,10 @@ def inputParser(elem):
     date = re.search(r'\d{4}-\d{2}-\d{2}\s\d{2}\:\d{2}', elem)
     date = str(date.group())
     date = parser.parse(date)
-    # print(date.minute)
+
+    # get the string after the datetime
+    message = re.search(r'\](.*)', elem)
+    message = str(message.group(1)).strip()
 
     # parse the guard
     guard = re.search(r'\d*(?=\sbegins)', elem)
@@ -69,55 +52,13 @@ def inputParser(elem):
     if 'begins' in elem or 'wakes' in elem:
         awake = True
     
-    return date, guard, awake
+    return date, message #, guard, awake
 
-# sortedList:
-# [[date, string],[date, string],[date, string],...]
-
-# order the input list
-def sortInput(data):
-    sortedList = []
-    # date-items can directly be compared
-    for item in data:
-        date = inputParser(item)
-        # insert the first element into the sorted list
-        if not sortedList:
-            sortedList.append([date, item])
-            continue
-        print('---- input date ----')
-        print(date)
-
-        for i in range(0, len(sortedList)):
-            print('---- list date ----')
-            print(sortedList[0][i])
-            if date < sortedList[0][i]:
-                print(' nothin')
-
-
-# sort the input
-sortInput(data)
-
-# keep track of current guard
-guardCurrent = '0'
-# # main loop
-# orderedData = {
-#     'month': 0,
-#     'day': 0,
-# }
-
-
-for item in data:
-    date, guard, awake = inputParser(item)
-    # order list while inserting into orderedList
-    # we know that the year is constant, but month and day vary
     
+# sort the input
+# separateInput(data)
 
+pp = pprint.PrettyPrinter()
+# this works...
+pp.pprint(sorted(data))
 
-    # not needed yet
-    if not guard:
-        guard = guardCurrent
-    if guard or awake:
-        guardCurrent = guard
-        print('Guard {} awake? {}. Minute is {}'.format(guard, awake, date.minute))
-    else:
-        print('Guard is sleeping')
