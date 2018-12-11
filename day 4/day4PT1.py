@@ -4,29 +4,26 @@ import pprint
 import re
 from dateutil import parser
 from operator import itemgetter
+from collections import defaultdict
 
 data = [
-    "[1518-05-11 00:47] wakes up",
-    "[1518-07-13 00:59] wakes up",
-    "[1518-06-16 00:49] falls asleep",
-    "[1518-08-17 00:01] Guard #3529 begins shift",
-    "[1518-07-07 00:21] falls asleep",
-    "[1518-03-28 23:56] Guard #1069 begins shift",
-    "[1518-08-03 00:04] Guard #3137 begins shift",
-    "[1518-04-21 00:56] wakes up",
-    "[1518-07-20 00:10] wakes up",
-    "[1518-11-17 00:04] Guard #1747 begins shift",
-    "[1518-07-14 00:00] Guard #829 begins shift",
-    "[1518-03-11 00:56] wakes up",
-    "[1518-11-16 00:22] falls asleep",
-    "[1518-07-15 00:56] falls asleep",
-    "[1518-03-18 00:22] wakes up",
-    "[1518-04-26 00:41] wakes up",
-    "[1518-04-05 23:59] Guard #2287 begins shift",
-    "[1518-06-20 00:20] falls asleep",
-    "[1518-08-10 00:55] wakes up",
-    "[1518-10-28 00:59] wakes up",
-    "[1518-09-09 00:27] falls asleep"
+    "[1518-11-01 00:00] Guard #10 begins shift",
+    "[1518-11-01 00:05] falls asleep",
+    "[1518-11-01 00:25] wakes up",
+    "[1518-11-01 00:30] falls asleep",
+    "[1518-11-01 00:55] wakes up",
+    "[1518-11-01 23:58] Guard #99 begins shift",
+    "[1518-11-02 00:40] falls asleep",
+    "[1518-11-02 00:50] wakes up",
+    "[1518-11-03 00:05] Guard #10 begins shift",
+    "[1518-11-03 00:24] falls asleep",
+    "[1518-11-03 00:29] wakes up",
+    "[1518-11-04 00:02] Guard #99 begins shift",
+    "[1518-11-04 00:36] falls asleep",
+    "[1518-11-04 00:46] wakes up",
+    "[1518-11-05 00:03] Guard #99 begins shift",
+    "[1518-11-05 00:45] falls asleep",
+    "[1518-11-05 00:55] wakes up"
 ]
 
 def inputParser(elem):
@@ -52,7 +49,7 @@ def inputParser(elem):
     if 'begins' in elem or 'wakes' in elem:
         awake = True
     
-    return date, message #, guard, awake
+    return date, message , guard, awake
 
     
 # sort the input
@@ -60,5 +57,24 @@ def inputParser(elem):
 
 pp = pprint.PrettyPrinter()
 # this works...
-pp.pprint(sorted(data))
 
+
+
+# main logic
+if __name__ == '__main__':
+    sortedList = sorted(data)
+    pp.pprint(sortedList)
+    # loop over the input and parse the elements
+    # keep a list of guards, asleep times
+    # i need to keep in mind that we look for the time a guard will likely be asleep
+    schedule = defaultdict(int)
+
+    index = 0
+    for item in data:
+        date, msg, guard, awake = inputParser(item)
+        print("date: {} -- message: {}".format(date, msg))
+        
+        schedule[guard] = {'sleeptime' : date,
+                            'guard': guard}
+
+    pp.pprint(schedule)
