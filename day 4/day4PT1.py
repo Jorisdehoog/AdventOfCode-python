@@ -46,11 +46,11 @@ def inputParser(elem):
     
     # get the state of the guard
     awoken = False
+    awake = False
     if 'wakes' in elem:
         awoken = True
         awake = True
 
-    awake = False
     if 'begins' in elem:
         awake = True
     
@@ -61,41 +61,37 @@ pp = pprint.PrettyPrinter()
 # main logic
 if __name__ == '__main__':
     sortedList = sorted(data)
-    pp.pprint(sortedList)
+    # pp.pprint(sortedList)
     # loop over the input and parse the elements
     # keep a list of guards, asleep times
     # i need to keep in mind that we look for the time a guard will likely be asleep
-    schedule = defaultdict(int)
+    schedule = {}
 
+    # schedule = defaultdict(int)
     # keep track of current guard
     currentGuard = None
-    awake = True
     for item in data:
         date, msg, guard, awoken, awake = inputParser(item)
-        # print("date: {} -- message: {}".format(date, msg))
-        # we don't want None in our dict keys
-        # begin indicates awake
-        # asleep indicates asleep duh
-        # need to update the dict
+        print(item)
         if guard:
-            currentGuard = int(guard)
-        if awoken:
-            # guard has fallen asleep, subtract the previous awake time
-            lastAsleep = schedule[currentGuard]['sleeptime']
-            schedule[currentGuard] = {'asleeptime' : date - lastAsleep }
-            schedule[currentGuard]
-            # pp.pprint(schedule)
+            currentGuard = (guard)
 
-        if awake:
-            # update the dict
-            schedule[currentGuard].update({'guard': currentGuard,
-                                'awake': awake,
-                                'asleep': False,
-                                'activetime': date })
-        if not awake:
-            schedule[currentGuard] = {'guard': currentGuard,
-                                'awake': False,
-                                'asleep': not awake,
-                                'sleeptime': date }
+        if currentGuard not in schedule:
+            schedule[currentGuard] = {}
+            schedule[currentGuard].update({'sleeptime': 0})
+
+        if not awake and not awoken:
+            schedule[currentGuard].update({'startsleep': date})
+
+        if awoken:
+            startsleep = schedule[currentGuard]['startsleep']
+            timedelta = (date - startsleep)
+            timedelta = timedelta.seconds/60
+            print(timedelta)
+            lastdelta = schedule[currentGuard]['sleeptime']
+            schedule[currentGuard].update({'sleeptime': lastdelta + timedelta})
+
+        
+        
 
     pp.pprint(schedule)
