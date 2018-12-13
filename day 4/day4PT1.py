@@ -61,10 +61,13 @@ pp = pprint.PrettyPrinter()
 # main logic
 if __name__ == '__main__':
     sortedList = sorted(data)
-    # pp.pprint(sortedList)
     # loop over the input and parse the elements
     # keep a list of guards, asleep times
     # i need to keep in mind that we look for the time a guard will likely be asleep
+    # should i use another data structure then dicts? 
+    sleeptime = {}
+    sleepminutes = {}
+
     schedule = {}
 
     # schedule = defaultdict(int)
@@ -85,6 +88,7 @@ if __name__ == '__main__':
 
         if awoken:
             startsleep = schedule[currentGuard]['startsleep']
+            
             timedelta = (date - startsleep)
             timedelta = timedelta.seconds/60
             print(timedelta)
@@ -94,4 +98,7 @@ if __name__ == '__main__':
         
         
 
-    pp.pprint(schedule)
+    pp.pprint(schedule['10']['sleeptime'])
+    for item in schedule:
+        print(schedule[item])
+        print('--------')
