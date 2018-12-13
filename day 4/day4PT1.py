@@ -65,8 +65,8 @@ if __name__ == '__main__':
     # keep a list of guards, asleep times
     # i need to keep in mind that we look for the time a guard will likely be asleep
     # should i use another data structure then dicts? 
-    sleeptime = {}
-    sleepminutes = {}
+    guardsleeping = defaultdict(list)
+    guardminutes = defaultdict(list)
 
     schedule = {}
 
@@ -75,30 +75,28 @@ if __name__ == '__main__':
     currentGuard = None
     for item in data:
         date, msg, guard, awoken, awake = inputParser(item)
-        print(item)
+        # print(item)
+
         if guard:
-            currentGuard = (guard)
-
-        if currentGuard not in schedule:
-            schedule[currentGuard] = {}
-            schedule[currentGuard].update({'sleeptime': 0})
-
-        if not awake and not awoken:
-            schedule[currentGuard].update({'startsleep': date})
-
-        if awoken:
-            startsleep = schedule[currentGuard]['startsleep']
-            
-            timedelta = (date - startsleep)
-            timedelta = timedelta.seconds/60
-            print(timedelta)
-            lastdelta = schedule[currentGuard]['sleeptime']
-            schedule[currentGuard].update({'sleeptime': lastdelta + timedelta})
+            currentGuard = guard
+        if currentGuard not in guardsleeping:
+            guardsleeping[currentGuard] = 0
+        if 'falls' in msg:
+            # print('fell asleep')
+            sleeptime = date
+        if 'wakes' in msg:
+            # should always pass
+            sleepdelta = date - sleeptime
+            # print(sleepdelta.seconds/60)
+            guardsleeping[currentGuard] += sleepdelta.seconds/60
+            # keep track of the minutes the guard was sleeping
+            # print(range(sleeptime.minute, date.minute))
+            guardminutes[currentGuard].append([sleeptime.minute, date.minute])
 
         
-        
-
-    pp.pprint(schedule['10']['sleeptime'])
-    for item in schedule:
-        print(schedule[item])
+    # get the highest value in the guardSleeping dict
+    maxi = max(guardsleeping.keys(), key=(lambda key: guardsleeping[key]))
+    print('Guard {} slept the longest with {} minutes'.format(maxi, guardsleeping[maxi]))
+    for item in guardsleeping:
+        print(guardsleeping[item])
         print('--------')
