@@ -5,26 +5,30 @@ import re
 from dateutil import parser
 from operator import itemgetter
 from collections import defaultdict
+from collections import Counter
 
-data = [
-    "[1518-11-01 00:00] Guard #10 begins shift",
-    "[1518-11-01 00:05] falls asleep",
-    "[1518-11-01 00:25] wakes up",
-    "[1518-11-01 00:30] falls asleep",
-    "[1518-11-01 00:55] wakes up",
-    "[1518-11-01 23:58] Guard #99 begins shift",
-    "[1518-11-02 00:40] falls asleep",
-    "[1518-11-02 00:50] wakes up",
-    "[1518-11-03 00:05] Guard #10 begins shift",
-    "[1518-11-03 00:24] falls asleep",
-    "[1518-11-03 00:29] wakes up",
-    "[1518-11-04 00:02] Guard #99 begins shift",
-    "[1518-11-04 00:36] falls asleep",
-    "[1518-11-04 00:46] wakes up",
-    "[1518-11-05 00:03] Guard #99 begins shift",
-    "[1518-11-05 00:45] falls asleep",
-    "[1518-11-05 00:55] wakes up"
-]
+# data = [
+#     "[1518-11-01 00:00] Guard #10 begins shift",
+#     "[1518-11-01 00:05] falls asleep",
+#     "[1518-11-01 00:25] wakes up",
+#     "[1518-11-01 00:30] falls asleep",
+#     "[1518-11-01 00:55] wakes up",
+#     "[1518-11-01 23:58] Guard #99 begins shift",
+#     "[1518-11-02 00:40] falls asleep",
+#     "[1518-11-02 00:50] wakes up",
+#     "[1518-11-03 00:05] Guard #10 begins shift",
+#     "[1518-11-03 00:24] falls asleep",
+#     "[1518-11-03 00:29] wakes up",
+#     "[1518-11-04 00:02] Guard #99 begins shift",
+#     "[1518-11-04 00:36] falls asleep",
+#     "[1518-11-04 00:46] wakes up",
+#     "[1518-11-05 00:03] Guard #99 begins shift",
+#     "[1518-11-05 00:45] falls asleep",
+#     "[1518-11-05 00:55] wakes up"
+# ]
+
+infile = open(r'day 4\input', 'r', newline='\r\n')
+data = infile.read().splitlines()
 
 def inputParser(elem):
     # parse the time
@@ -73,9 +77,9 @@ if __name__ == '__main__':
     # schedule = defaultdict(int)
     # keep track of current guard
     currentGuard = None
-    for item in data:
+    for item in sortedList:
         date, msg, guard, awoken, awake = inputParser(item)
-        # print(item)
+        print(item)
 
         if guard:
             currentGuard = guard
@@ -86,17 +90,31 @@ if __name__ == '__main__':
             sleeptime = date
         if 'wakes' in msg:
             # should always pass
-            sleepdelta = date - sleeptime
+            if sleeptime:
+                sleepdelta = date - sleeptime
+            else:
+                print('what')
             # print(sleepdelta.seconds/60)
             guardsleeping[currentGuard] += sleepdelta.seconds/60
             # keep track of the minutes the guard was sleeping
             # print(range(sleeptime.minute, date.minute))
-            guardminutes[currentGuard].append([sleeptime.minute, date.minute])
+            guardminutes[currentGuard].append(list(range(sleeptime.minute, date.minute+1)))
 
-        
+    
     # get the highest value in the guardSleeping dict
     maxi = max(guardsleeping.keys(), key=(lambda key: guardsleeping[key]))
     print('Guard {} slept the longest with {} minutes'.format(maxi, guardsleeping[maxi]))
-    for item in guardsleeping:
-        print(guardsleeping[item])
-        print('--------')
+
+    # we know what guard slept the longest, now get the most common minute
+    allminutes = guardminutes[maxi]
+    # flatten this list
+    allmin = [item for sublist in allminutes for item in sublist]
+    # print(allminutesunion)
+
+    # use the counter to get the first most common item
+    mostsleptmin, mostsleptnum = Counter(allmin).most_common(1)[0]
+    print(mostsleptmin)
+
+    # we only need to multiply with the guard number now
+    answer = int(maxi) * int(mostsleptmin)
+    print('Answer: {}'.format(answer))
