@@ -61,16 +61,13 @@ if __name__ == '__main__':
     allminutes = guardminutes[maxi]
     # flatten this list
     allmin = [item for sublist in allminutes for item in sublist]
-
     # use the counter to get the first most common item
     mostsleptmin, mostsleptnum = Counter(allmin).most_common(1)[0]
-    print(mostsleptmin)
 
     # we only need to multiply with the guard number now
     answer = int(maxi) * int(mostsleptmin)
     print('Answer PT1: {}'.format(answer))
 
-    sleepyguards = defaultdict(list)
     # loop over the guardminutes, get the occurrences of the minutes and find the max for each guard
     maxnum = 0
     sleepyguard = 0
@@ -84,8 +81,7 @@ if __name__ == '__main__':
             sleepyminute = sleptmin
             maxnum = sleptnum
         print("Guard {} slept minute {} for {} times".format(item, sleptmin, sleptnum))
-        # sleepyguards[tempguard].append([sleptmin, sleptnum])
-    # get the 
+    # get the answer
     answer2 = int(sleepyguard) * int(sleepyminute)
     print('Guard {} slept during minute {} for {} times, answer is {}'.format(sleepyguard, sleepyminute, maxnum, answer2))
 
