@@ -68,6 +68,24 @@ if __name__ == '__main__':
 
     # we only need to multiply with the guard number now
     answer = int(maxi) * int(mostsleptmin)
-    print('Answer: {}'.format(answer))
+    print('Answer PT1: {}'.format(answer))
 
+    sleepyguards = defaultdict(list)
+    # loop over the guardminutes, get the occurrences of the minutes and find the max for each guard
+    maxnum = 0
+    sleepyguard = 0
+    sleepyminute = 0
+    for item in guardminutes:
+        tempguard = item
+        slept = [p for sublist in guardminutes[item] for p in sublist]
+        sleptmin, sleptnum = Counter(slept).most_common(1)[0]
+        if sleptnum > maxnum:
+            sleepyguard = item
+            sleepyminute = sleptmin
+            maxnum = sleptnum
+        print("Guard {} slept minute {} for {} times".format(item, sleptmin, sleptnum))
+        # sleepyguards[tempguard].append([sleptmin, sleptnum])
+    # get the 
+    answer2 = int(sleepyguard) * int(sleepyminute)
+    print('Guard {} slept during minute {} for {} times, answer is {}'.format(sleepyguard, sleepyminute, maxnum, answer2))
 
