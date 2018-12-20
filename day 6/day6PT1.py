@@ -3,7 +3,7 @@ import re
 import pprint
 
 # get the input
-infile = open(r'day 6\input2', 'r', newline='\r\n')
+infile = open(r'day 6\input', 'r', newline='\r\n')
 datastr = infile.read().splitlines()
 
 # init pprint
@@ -37,16 +37,16 @@ grid = np.zeros([ysize + 2, xsize + 2], int)
 # 2) go over list again. go through the grid. everytime we encounter a spot
 # search for next point
 # (length fill = manhattan distance)
-i = 1
+i = 10
 for item in data:
     x = item[0]
     # print(x)
     y = item[1]
     # coordinates are reversed
-    grid[y][x] = str(i)
+    grid[y][x] = (i)
     i += 1
 
-print(grid)
+# print(grid)
 
 # loop over the coordinates again, and for each point fill in another 'ring' around the original point?
 # no, loop over the points and calculate the manhattan distance to all other points. Fill in with the number
@@ -73,7 +73,8 @@ for yax in range(0, grid.shape[1]):
             y1 = item[0]
             dis = distance(point, [x1, y1])
             # np.append([dislist], [i, dis], axis=1)
-            dislist.append([i, dis])
+            testpoint = grid[x1, y1]
+            dislist.append([testpoint, dis])
             i = i + 1
         
         # look for the min value
@@ -92,19 +93,30 @@ for yax in range(0, grid.shape[1]):
         # print(mindis)
     # print(grid)
 print('-------------------------')
-print(grid)
+# print(grid)
 
 # grid shape
 x, y = grid.shape
 
 # find the largest set of numbers that are contained, and not infinite (not on the edge)
-y = np.bincount(grid.flatten())
-ii = np.nonzero(y)[0]
+uniques = np.bincount(grid.flatten())
+ii = np.nonzero(uniques)[0]
 
-for elem, num in zip(ii, y[ii]):
+solutions = []
+
+for elem, num in zip(ii, uniques[ii]):
     test = np.where(grid == elem)
-    if test.any() == 0:
+    test = np.array(test)
+    # print(type(test))
+    if (test == 0).any() or (test >= x-1).any() or (test >= y-1).any():
         # edge case: 
         print('{} extends to infinity'.format(elem))
-    print(test)
-    print(elem, num)
+    else:
+        print('{} IS FINE, size = {}'.format(elem, num))
+        solutions.append([elem, num])
+    # print(test)
+    # print(elem, num)
+
+solutions = np.array(solutions)
+print(solutions)
+print(max(solutions[:, 1]))
