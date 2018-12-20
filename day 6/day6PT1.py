@@ -93,3 +93,18 @@ for yax in range(0, grid.shape[1]):
     # print(grid)
 print('-------------------------')
 print(grid)
+
+# grid shape
+x, y = grid.shape
+
+# find the largest set of numbers that are contained, and not infinite (not on the edge)
+y = np.bincount(grid.flatten())
+ii = np.nonzero(y)[0]
+
+for elem, num in zip(ii, y[ii]):
+    test = np.where(grid == elem)
+    if test.any() == 0:
+        # edge case: 
+        print('{} extends to infinity'.format(elem))
+    print(test)
+    print(elem, num)
