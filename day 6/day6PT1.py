@@ -1,13 +1,10 @@
 import numpy as np
 import re
-import pprint
 
 # get the input
 infile = open(r'day 6\input', 'r', newline='\r\n')
 datastr = infile.read().splitlines()
 
-# init pprint
-pp = pprint.PrettyPrinter()
 
 def distance(co1, co2):
     # co1 and co2 are two points with two coordinates
@@ -31,7 +28,6 @@ print("max x: {}, max y: {}".format(xsize, ysize))
 
 # init zero matrix
 grid = np.zeros([ysize + 2, xsize + 2], int)
-# pp.pprint(grid)
 
 # 1) loop over the input data, and populate the grid with the coordinates
 # 2) go over list again. go through the grid. everytime we encounter a spot
@@ -46,7 +42,6 @@ for item in data:
     grid[y][x] = (i)
     i += 1
 
-# print(grid)
 
 # loop over the coordinates again, and for each point fill in another 'ring' around the original point?
 # no, loop over the points and calculate the manhattan distance to all other points. Fill in with the number
@@ -56,14 +51,10 @@ for yax in range(0, grid.shape[1]):
     for xax in range(0, grid.shape[0]):
         # loop over coordinates:
         point = [xax, yax]
-        # grid[xax, yax] = 999
-        # print(grid)
-        # continue
         if grid[xax, yax] != 0:
             continue
 
         # dislist = np.array(dislist)
-        i = 1
         # init new 
         dislist = []
         # dislist = np.array(dislist)
@@ -75,24 +66,18 @@ for yax in range(0, grid.shape[1]):
             # np.append([dislist], [i, dis], axis=1)
             testpoint = grid[x1, y1]
             dislist.append([testpoint, dis])
-            i = i + 1
         
         # look for the min value
         dislist = np.array(dislist)
-        # print(dislist[:, 1])
         mindis = min(dislist[:, 1])
         minitemindex = np.where(dislist[:, 1] == mindis)
-        # print(np.asarray(minitemindex).shape)
         if np.asarray(minitemindex).shape != (1, 1):
             # we need to skip this point
-            # print('opes')
             continue
 
         grid[xax][yax] = dislist[minitemindex, 0]
         
-        # print(mindis)
-    # print(grid)
-print('-------------------------')
+
 # print(grid)
 
 # grid shape
@@ -102,21 +87,19 @@ x, y = grid.shape
 uniques = np.bincount(grid.flatten())
 ii = np.nonzero(uniques)[0]
 
+# i can replace the array with a single value and compare new found areas with this one
 solutions = []
-
 for elem, num in zip(ii, uniques[ii]):
     test = np.where(grid == elem)
     test = np.array(test)
-    # print(type(test))
-    if (test == 0).any() or (test >= x-1).any() or (test >= y-1).any():
+    # this test could be better, i think i'm taking a risk here
+    if (test == 0).any() or (test == x-1).any() or (test == y-1).any():
         # edge case: 
-        print('{} extends to infinity'.format(elem))
+        # print('{} extends to infinity'.format(elem))
+        continue
     else:
-        print('{} IS FINE, size = {}'.format(elem, num))
+        # print('{} IS FINE, size = {}'.format(elem, num))
         solutions.append([elem, num])
-    # print(test)
-    # print(elem, num)
 
 solutions = np.array(solutions)
-print(solutions)
 print(max(solutions[:, 1]))
