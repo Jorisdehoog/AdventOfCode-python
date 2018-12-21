@@ -33,7 +33,7 @@ grid = np.zeros([ysize + 2, xsize + 2], int)
 # 2) go over list again. go through the grid. everytime we encounter a spot
 # search for next point
 # (length fill = manhattan distance)
-i = 11
+i = 1
 for item in data:
     x = item[0]
     # print(x)
@@ -55,11 +55,18 @@ for i, row in enumerate(grid):
         # print(grid[i, j])
         # get the distance from the point to the populated items
         totaldis = 0
-        for item in data:
+        for index, item in enumerate(data):
             totaldis += distance([i, j], item)
+            if totaldis > 10000:
+                break
         # print(totaldis)
-        if totaldis < 1000:
-            grid[i, j] = '-1'
+
+        # if index == len(data)-1: 
+        #     print('hey')
+
+        if index == len(data)-1 and totaldis < 10000:
+            grid[i, j] = -1
+            # print('good one')
         # print('')
         # dislist = np.array(dislist)
         # mindis = min(dislist[:, 1])
@@ -73,51 +80,3 @@ for i, row in enumerate(grid):
 nummin = np.where(grid.flatten() == -1)[0]
 print(len(np.asarray(nummin)))
 
-# grid shape
-x, y = grid.shape
-
-# find the largest set of numbers that are contained, and not infinite (not on the edge)
-uniques = np.bincount(grid.flatten())
-ii = np.nonzero(uniques)[0]
-
-# i can replace the array with a single value and compare new found areas with this one
-solutions = []
-for elem, num in zip(ii, uniques[ii]):
-    test = np.where(grid == elem)
-    test = np.array(test)
-    # this test could be better, i think i'm taking a risk here
-    if (test == 0).any() or (test == x-1).any() or (test == y-1).any():
-        # edge case: 
-        # print('{} extends to infinity'.format(elem))
-        continue
-    else:
-        # print('{} IS FINE, size = {}'.format(elem, num))
-        solutions.append([elem, num])
-
-solutions = np.array(solutions)
-print(max(solutions[:, 1]))
-
-""" PART 2"""
-
-# loop over the coordinates again, and for each point fill in another 'ring' around the original point?
-# no, loop over the points and calculate the manhattan distance to all other points. Fill in with the number
-# of the closest point
-
-for idx, item in enumerate(data):
-    # find all the distances to the other items in data
-    # print(idx, item)
-    # create list of indices
-    looplist = list(range(0, len(data)))
-    del looplist[idx]
-    # print(looplist)
-    totaldis = 0
-    for i in looplist:
-        # get the distances
-        totaldis += distance(item, data[i])
-        # print(totaldis)
-    if totaldis < 32:
-        print("{} is a good one!".format(grid[item[1]][item[0]]))
-    else: 
-        print("{} is a bad one!".format(grid[item[1]][item[0]]))
-
-print(solutions)
