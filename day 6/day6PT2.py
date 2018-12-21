@@ -2,7 +2,7 @@ import numpy as np
 import re
 
 # get the input
-infile = open(r'day 6\input2', 'r', newline='\r\n')
+infile = open(r'day 6\input', 'r', newline='\r\n')
 datastr = infile.read().splitlines()
 
 
@@ -45,9 +45,6 @@ for item in data:
 # WAIT no i misread the question: I need to loop over all the points in the grid, and if the accumulative distances to the other points are
 # less than 32, mark it. 
 
-
-
-
 # remark: i still need to make the list of all valid areas using the solution for pt1
 # i can probably make this more efficient though, i botched that one pretty badly
 
@@ -57,17 +54,24 @@ for i, row in enumerate(grid):
         # print([i, j])
         # print(grid[i, j])
         # get the distance from the point to the populated items
-        dislist = []
+        totaldis = 0
         for item in data:
-            dis = distance([i, j], item)
-            dislist.append([grid[item[1]][item[0]], dis])
-        dislist = np.array(dislist)
-        mindis = min(dislist[:, 1])
-        minitemindex = np.where(dislist[:, 1] == mindis)
-        if np.asarray(minitemindex).shape != (1, 1):
-            continue
-        grid[i, j] = dislist[minitemindex, 0]
-print(grid)
+            totaldis += distance([i, j], item)
+        # print(totaldis)
+        if totaldis < 1000:
+            grid[i, j] = '-1'
+        # print('')
+        # dislist = np.array(dislist)
+        # mindis = min(dislist[:, 1])
+        # minitemindex = np.where(dislist[:, 1] == mindis)
+        # if np.asarray(minitemindex).shape != (1, 1):
+        #     continue
+        # grid[i, j] = dislist[minitemindex, 0]
+# print(grid)
+
+# count the number of '-1'
+nummin = np.where(grid.flatten() == -1)[0]
+print(len(np.asarray(nummin)))
 
 # grid shape
 x, y = grid.shape
